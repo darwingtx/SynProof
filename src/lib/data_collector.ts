@@ -1,22 +1,35 @@
 import { exec } from 'child_process';
 import fs from 'fs';
 
-export interface NodeData {
+export interface BlockData {
     id: string // wallet
-    timestamp: number,
-    packages: PackageData[]
+    data: NodeData
+    timestamp: number
 }
 
-export type NodeMetada = {
-    so: string,
-    hostname: string,
-    serial_number: string // dmidecode -s system-serial-number
+export type NodeData = {
+    metadata: NodeMetadata,
+    packages: PackageData[]
 }
 
 export type PackageData = {
     name: string,
     version: string
 }
+
+export type NodeMetadata = {
+    so: string,
+    hostname: string,
+    serial_number: string // dmidecode -s system-serial-number
+    state: NodeState
+}
+
+export enum NodeState {
+    UPDATED,
+    UPDATING,
+    ERROR
+}
+
 
 export function get_packages(): PackageData[] {
     const packages_json = "versions.json"
