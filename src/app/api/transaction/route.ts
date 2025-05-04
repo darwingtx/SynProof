@@ -12,11 +12,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
     try {
         const key = process.env.PRIVATE_KEY;
         if (key == undefined) return NextResponse.json({ error: 'Transaction error' }, { status: 500 })
-        console.log("Private key: "+key)
+        console.log("Private key: "+key);
         const signer = new ethers.Wallet(key, provider)
         const tx = await signer.sendTransaction({
             to,
-            value: ethers.parseUnits(tokens, 'CUM TOKEN')
+            value: ethers.parseUnits(tokens, 'ether')
         });
         return NextResponse.json({
             status: 400,
