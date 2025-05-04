@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {usePrivy} from '@privy-io/react-auth';
-
+import Nav from '@/components/ui/nav'
 export default function EquipmentDashboard() {
   const equipments = [
     {
@@ -45,7 +45,18 @@ export default function EquipmentDashboard() {
 
   const { login, logout, authenticated, user } = usePrivy();
   if (!authenticated) {
-    return <button onClick={login}>Conectar Wallet</button>;
+    return (
+        <div>
+          <p className="text-center text-white">Need to login with  your wallet</p>
+          <button type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={login}
+          >
+            Login
+          </button>
+        </div>
+    )
+        ;
   }
   const address = user?.wallet?.address;
   const getUpdateBadgeVariant = (count: number) => {
@@ -56,13 +67,6 @@ export default function EquipmentDashboard() {
 
   return (
       <div className="p-6 max-w-full">
-
-        <div>
-          <p>Conectado como: {address}</p>
-          <button onClick={logout}>Desconectar</button> <br/>
-          <button onClick={() => fetchBalance(address!)}>Consultar balance</button>
-        </div>
-
         <h1 className="text-4xl font-bold mb-8">Estado de los equipos</h1>
         <Table>
           <TableHeader>
