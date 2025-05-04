@@ -20,7 +20,7 @@ interface DeviceInfo {
 }
 
 export default function DeviceInfoPage() {
-  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>({
+  const [deviceInfo] = useState<DeviceInfo>({
     id: "7e0efe28e710a775596d3b93c8c26509",
     serialNumber: "NHQ59AL00H9480D4F83400",
     operatingSystem: "NixOS",
@@ -37,15 +37,15 @@ export default function DeviceInfoPage() {
   const pendingUpdatesCount = deviceInfo.softwareVersions.filter(
     (software) => software.currentVersion !== software.latestVersion,
   ).length
+
   return (
     <div className="container mx-auto py-10 space-y-6">
-      <h1 className="text-3xl font-bold">Equipo {deviceInfo.serialNumber}</h1>
-
+      <h1 className="text-3xl font-bold">Equipo <span className="font-mono">{deviceInfo.serialNumber}</span></h1>
       <Card>
         <CardHeader>
           <CardTitle>ID del equipo</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="font-mono">
           <p>{deviceInfo.id}</p>
         </CardContent>
       </Card>
@@ -54,7 +54,7 @@ export default function DeviceInfoPage() {
         <CardHeader>
           <CardTitle>Numero de serial</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="font-mono">
           <p>{deviceInfo.serialNumber}</p>
         </CardContent>
       </Card>
@@ -63,7 +63,7 @@ export default function DeviceInfoPage() {
         <CardHeader>
           <CardTitle>Sistema operativo</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="font-mono">
           <p>{deviceInfo.operatingSystem}</p>
         </CardContent>
       </Card>
@@ -89,9 +89,9 @@ export default function DeviceInfoPage() {
             <TableBody>
               {deviceInfo.softwareVersions.map((software, index) => (
                 <TableRow key={software.name}>
-                  <TableCell className="w-full">{software.name}</TableCell>
-                  <TableCell className="w-1/3 text-right">{software.currentVersion}</TableCell>
-                  <TableCell className="w-1/3 text-right">{software.latestVersion}</TableCell>
+                  <TableCell className="w-full font-mono">{software.name}</TableCell>
+                  <TableCell className="w-1/3 text-right font-mono">{software.currentVersion}</TableCell>
+                  <TableCell className="w-1/3 text-right font-mono">{software.latestVersion}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -100,17 +100,15 @@ export default function DeviceInfoPage() {
       </Card>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row align-center justify-between">
           <CardTitle>Estado</CardTitle>
-        </CardHeader>
-        <CardContent className="flex items-center justify-between">
           <Badge
             variant="warning"
             className={`${deviceInfo.isUpdating ? "bg-[#fbbf24]" : "bg-green-500"} hover:bg-[#f59e0b]`}
           >
             {deviceInfo.isUpdating ? "Actualizando" : "Actualizado"}
           </Badge>
-        </CardContent>
+        </CardHeader>
       </Card>
     </div>
   )
