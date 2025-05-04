@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { ethers, Wallet, Contract } from 'ethers';
-import { AVALANCHE_TESTNET_RPC, CONTRACT_ABI, CONTRACT_ADDRESS, SUPERADMIN_PRIVATE_KEY } from '@/lib/const';
+import { AVALANCHE_TESTNET_RPC, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/const';
 
 const provider = new ethers.JsonRpcProvider(AVALANCHE_TESTNET_RPC);
 
@@ -14,11 +14,17 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Server configuration error: Invalid contract address' }, { status: 500 });
     }
 
+		const {
+			numSerie,
+			userAddress,
+			adminPrivateKey
+		} = await req.json();
+
     try {
         let signer = null;
         let signerAddress = 'N/A (No signer created for read-only)';
-        if (SUPERADMIN_PRIVATE_KEY) {
-             signer = new Wallet(SUPERADMIN_PRIVATE_KEY, provider);
+        if (adminPrivateKey) {
+             signer = new Wallet(adminPrivateKey, provider);
              signerAddress = signer.address;
              console.log(`Using signer address: ${signerAddress}`);
         } else {
@@ -28,16 +34,19 @@ export async function POST(req: NextRequest) {
         const computerTrackerContract = new Contract(
             CONTRACT_ADDRESS,
             CONTRACT_ABI,
-						signer ?? provider
+            signer ?? provider
         );
 
-        const connectedAddress = await computerTrackerContract.getAddress(); // ethers v6+
+        const connectedAddress = await computerTrackerContract.getAddress();
         console.log(`Successfully created contract instance for address: ${connectedAddress}`);
 
-				const { adminAddress } = await req.json()
-        console.log('Attempting to call adminAddress with:', adminAddress);
+        const userData = {
+					numSerie,
+					userAddress
+				}
+        console.log('Attempting to call putUser with:', userData);
 
-        const tx = await computerTrackerContract.putAdmin(adminAddress);
+        const tx = await computerTrackerContract.putUser(userData);
 
         console.log(`Transaction sent! Hash: ${tx.hash}`);
         console.log(`Waiting for transaction confirmation...`);
@@ -46,10 +55,10 @@ export async function POST(req: NextRequest) {
         console.log(`Transaction confirmed! Block number: ${receipt?.blockNumber}`);
 
         return NextResponse.json({
-            message: 'Admin successfully added to the contract.',
+            message: 'User successfully added to the contract.',
             transactionHash: receipt?.hash,
             blockNumber: receipt?.blockNumber,
-            adminAddress
+            addedUser: userData
         });
     } catch (err: any) {
         console.error('Error connecting to contract:', err);

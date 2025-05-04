@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { ethers, Wallet, Contract } from 'ethers';
-import { AVALANCHE_TESTNET_RPC, CONTRACT_ABI, CONTRACT_ADDRESS, SUPERADMIN_PRIVATE_KEY } from '@/lib/const';
+import { AVALANCHE_TESTNET_RPC, CONTRACT_ABI, CONTRACT_ADDRESS } from '@/lib/const';
+import { extractPackagesWithVersions } from '@/lib/data_collector';
 
 const provider = new ethers.JsonRpcProvider(AVALANCHE_TESTNET_RPC);
 
@@ -17,8 +18,13 @@ export async function POST(req: NextRequest) {
     try {
         let signer = null;
         let signerAddress = 'N/A (No signer created for read-only)';
-        if (SUPERADMIN_PRIVATE_KEY) {
-             signer = new Wallet(SUPERADMIN_PRIVATE_KEY, provider);
+
+				const {
+					userPrivateKey
+				} = await req.json();
+
+        if (userPrivateKey) {
+             signer = new Wallet(userPrivateKey, provider);
              signerAddress = signer.address;
              console.log(`Using signer address: ${signerAddress}`);
         } else {
@@ -33,11 +39,17 @@ export async function POST(req: NextRequest) {
 
         const connectedAddress = await computerTrackerContract.getAddress(); // ethers v6+
         console.log(`Successfully created contract instance for address: ${connectedAddress}`);
+        console.log('Attempting to call trackComputer with:', userPrivateKey);
 
-				const { adminAddress } = await req.json()
-        console.log('Attempting to call adminAddress with:', adminAddress);
+				const extractedData = await extractPackagesWithVersions()
 
-        const tx = await computerTrackerContract.putAdmin(adminAddress);
+				const blockData = {
+					blockdata: JSON.stringify(extractedData),
+					numSerie: "NHQ59AL00H9480D4F83401",
+					timestamp: 100000000000000
+				}
+
+        const tx = await computerTrackerContract.trackComputer(blockData);
 
         console.log(`Transaction sent! Hash: ${tx.hash}`);
         console.log(`Waiting for transaction confirmation...`);
@@ -46,11 +58,11 @@ export async function POST(req: NextRequest) {
         console.log(`Transaction confirmed! Block number: ${receipt?.blockNumber}`);
 
         return NextResponse.json({
-            message: 'Admin successfully added to the contract.',
+            message: 'Computer successfully tracked and added to the contract.',
             transactionHash: receipt?.hash,
             blockNumber: receipt?.blockNumber,
-            adminAddress
-        });
+						extractedData
+        })
     } catch (err: any) {
         console.error('Error connecting to contract:', err);
         let errorMessage = 'Error connecting to the smart contract.';
