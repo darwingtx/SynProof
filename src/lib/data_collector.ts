@@ -43,12 +43,32 @@ export function update_packges(consensus_packages: PackageData[]): void {
     fs.writeFileSync("versions.json", to_json);
 }
 
-function command(command: string): any {
-    exec('command', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error ejecutando el comando: ${error}`);
-            return {undefined, error};
-        }
-        return {stdout, stderr}
-    });
+export async function extractPackagesWithVersions(): Promise<Array<PackageData>> {
+	return new Promise((resolve, reject) => 
+    exec('sudo pacman -Q', (error, stdout, stderr) => {
+			/*
+			if (error) {
+				console.error(`Error ejecutando el comando: ${error}`);
+				reject({error, stderr});
+			}
+			*/
+
+			const temp = `a52dec 0.8.0-2
+aalib 1.4rc5-18
+abseil-cpp 20240722.0-1
+accountsservice 23.13.9-2
+acl 2.3.2-1
+acpi 1.7-4`
+
+			resolve(temp.split(`\n`)
+				.filter(p => p.trim().length > 0)
+				.map(p => {
+					const [packageName, packageVersion] = p.split(' ')
+					return {
+						name: packageName,
+						version: packageVersion
+					};
+				})
+		 );
+		}));
 }

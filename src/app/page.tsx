@@ -1,103 +1,93 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+export default function EquipmentDashboard() {
+  const equipments = [
+    {
+      id: "7e0efe28e710a775596d3b93c8c26509",
+      serial: "NHQ59AL00H9480D4F83400",
+      os: "NixOS",
+      pendingUpdates: 13,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26510",
+      serial: "NHQ59AL00H9480D4F83401",
+      os: "Ubuntu",
+      pendingUpdates: 2,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26511",
+      serial: "NHQ59AL00H9480D4F83402",
+      os: "Alpine",
+      pendingUpdates: 9,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26512",
+      serial: "NHQ59AL00H9480D4F83403",
+      os: "Manjaro",
+      pendingUpdates: 2,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26513",
+      serial: "NHQ59AL00H9480D4F83404",
+      os: "NixOS",
+      pendingUpdates: 13,
+      status: "Actualizando",
+    },
+  ]
+
+  const getUpdateBadgeVariant = (count: number) => {
+    if (count >= 10) return "green";
+    if (count >= 5) return "green";
+    return "green"
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    <div className="p-6 max-w-full">
+      <h1 className="text-4xl font-bold mb-8">Estado de los equipos</h1>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="font-medium">ID del equipo</TableHead>
+            <TableHead className="font-medium">Numero de serial</TableHead>
+            <TableHead className="font-medium">Sistema operativo</TableHead>
+            <TableHead className="font-medium">Estado actualizaciones</TableHead>
+            <TableHead className="font-medium">Estado</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {equipments.map((equipment) => (
+            <TableRow key={equipment.id}>
+              <TableCell className="font-mono">{equipment.id}</TableCell>
+              <TableCell className="font-mono">{equipment.serial}</TableCell>
+              <TableCell className="font-mono">{equipment.os}</TableCell>
+              <TableCell>
+                <Badge
+                  variant="outline"
+                  className={`
+                    bg-${getUpdateBadgeVariant(equipment.pendingUpdates)}-400
+                    text-black border-none px-3 py-1 font-mono
+                  `}
+                >{equipment.pendingUpdates} actualizaciones pendientes</Badge>
+              </TableCell>
+              <TableCell>
+                <Badge
+                  variant="outline"
+                  className={`bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-400 hover:bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-500 text-black border-none font-mono px-3 py-1`}
+                >
+                  {equipment.status}
+                </Badge>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
-  );
+  )
 }
