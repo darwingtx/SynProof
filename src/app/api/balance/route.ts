@@ -1,8 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { ethers } from 'ethers';
 
-const AVALANCHE_TESTNET_RPC = 'https://api.avax-test.network/ext/bc/C/rpc';
-const provider = new ethers.JsonRpcProvider(AVALANCHE_TESTNET_RPC);
+const provider = new ethers.JsonRpcProvider(process.env.AVALANCHE_TESTNET_RPC);
 
 export async function POST(req: NextRequest, res: NextResponse) {
     const { address } = await req.json();
