@@ -63,3 +63,14 @@ export async function extractPackagesWithVersions(): Promise<Array<PackageData>>
 		 );
 		}));
 }
+
+export async function getSerialNumber() {
+    return new Promise((resolve, reject) =>
+        exec('sudo dmidecode -s system-serial-number', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error ejecutando el comando: ${error}`);
+            reject({error, stderr});
+        }
+        resolve(stdout);
+    }));
+}

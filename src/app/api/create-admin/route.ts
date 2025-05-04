@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         const computerTrackerContract = new Contract(
             CONTRACT_ADDRESS,
             CONTRACT_ABI,
-						signer ?? provider
+            signer ?? provider
         );
 
         const connectedAddress = await computerTrackerContract.getAddress(); // ethers v6+

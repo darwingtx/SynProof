@@ -34,16 +34,27 @@ export const CONTRACT_ABI = [
 		"anonymous": false,
 		"inputs": [
 			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "blockdata",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "numSerie",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
 				"indexed": true,
-				"internalType": "string",
-				"name": "numSerie",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
+				"internalType": "struct ComputerTracker.Computer",
+				"name": "data",
+				"type": "tuple"
 			}
 		],
 		"name": "ComputerTracked",
@@ -169,7 +180,8 @@ export const CONTRACT_ABI = [
 						"internalType": "string",
 						"name": "numSerie",
 						"type": "string"
-					}, {
+					},
+					{
 						"internalType": "uint256",
 						"name": "timestamp",
 						"type": "uint256"
@@ -178,6 +190,38 @@ export const CONTRACT_ABI = [
 				"internalType": "struct ComputerTracker.Computer[]",
 				"name": "",
 				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isAdmin",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "numSerie",
+				"type": "string"
+			}
+		],
+		"name": "isUser",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -264,9 +308,9 @@ export const CONTRACT_ABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-];
+]
 
-export const AVALANCHE_TESTNET_RPC = 'https://upgraded-cod-4r69pgrg747cjggx-9652.app.github.dev/ext/bc/2LJMzE6uWXeCVYr9Z1U44Ci2AX56JuZgYPonrt43p2vTY3FMs9/rpc';
+export const AVALANCHE_TESTNET_RPC = 'https://subnets.avax.network/synproof/testnet/rpc';
 export const SUPERADMIN_PRIVATE_KEY = "915f4c540d456a6d766ce5971b317e886bf5176da68bfb1eb0c1779ff0e9f468";
-export const CONTRACT_ADDRESS = "0x1beb0CC4BD220C991D7fE20B130b10279e3bCE1a";
-
+//export const CONTRACT_ADDRESS = "0x1beb0CC4BD220C991D7fE20B130b10279e3bCE1a";
+export const CONTRACT_ADDRESS = "0xA498779B027a0a8C9Bc800fAcD4A965a1Bd707E3";
