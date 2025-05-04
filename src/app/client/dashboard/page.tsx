@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {usePrivy} from '@privy-io/react-auth';
 
 export default function EquipmentDashboard() {
   const equipments = [
@@ -42,6 +43,11 @@ export default function EquipmentDashboard() {
     },
   ]
 
+  const { login, logout, authenticated, user } = usePrivy();
+  if (!authenticated) {
+    return <button onClick={login}>Conectar Wallet</button>;
+  }
+  const address = user?.wallet?.address;
   const getUpdateBadgeVariant = (count: number) => {
     if (count >= 10) return "green";
     if (count >= 5) return "green";
@@ -49,45 +55,65 @@ export default function EquipmentDashboard() {
   }
 
   return (
-    <div className="p-6 max-w-full">
-      <h1 className="text-4xl font-bold mb-8">Estado de los equipos</h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="font-medium">ID del equipo</TableHead>
-            <TableHead className="font-medium">Numero de serial</TableHead>
-            <TableHead className="font-medium">Sistema operativo</TableHead>
-            <TableHead className="font-medium">Estado actualizaciones</TableHead>
-            <TableHead className="font-medium">Estado</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {equipments.map((equipment) => (
-            <TableRow key={equipment.id}>
-              <TableCell className="font-mono">{equipment.id}</TableCell>
-              <TableCell className="font-mono">{equipment.serial}</TableCell>
-              <TableCell className="font-mono">{equipment.os}</TableCell>
-              <TableCell>
-                <Badge
-                  variant="outline"
-                  className={`
+      <div className="p-6 max-w-full">
+
+        <div>
+          <p>Conectado como: {address}</p>
+          <button onClick={logout}>Desconectar</button> <br/>
+          <button onClick={() => fetchBalance(address!)}>Consultar balance</button>
+        </div>
+
+        <h1 className="text-4xl font-bold mb-8">Estado de los equipos</h1>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="font-medium">ID del equipo</TableHead>
+              <TableHead className="font-medium">Numero de serial</TableHead>
+              <TableHead className="font-medium">Sistema operativo</TableHead>
+              <TableHead className="font-medium">Estado actualizaciones</TableHead>
+              <TableHead className="font-medium">Estado</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {equipments.map((equipment) => (
+                <TableRow key={equipment.id}>
+                  <TableCell className="font-mono">{equipment.id}</TableCell>
+                  <TableCell className="font-mono">{equipment.serial}</TableCell>
+                  <TableCell className="font-mono">{equipment.os}</TableCell>
+                  <TableCell>
+                    <Badge
+                        variant="outline"
+                        className={`
                     bg-${getUpdateBadgeVariant(equipment.pendingUpdates)}-400
                     text-black border-none px-3 py-1 font-mono
                   `}
-                >{equipment.pendingUpdates} actualizaciones pendientes</Badge>
-              </TableCell>
-              <TableCell>
-                <Badge
-                  variant="outline"
-                  className={`bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-400 hover:bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-500 text-black border-none font-mono px-3 py-1`}
-                >
-                  {equipment.status}
-                </Badge>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+                    >{equipment.pendingUpdates} actualizaciones pendientes</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                        variant="outline"
+                        className={`bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-400 hover:bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-500 text-black border-none font-mono px-3 py-1`}
+                    >
+                      {equipment.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
   )
+}
+
+
+async function fetchBalance(address: string) {
+  const body = JSON.stringify({ address });
+  console.log(body);
+  const res = await fetch('/api/balance', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body
+  });
+  const data = await res.json();
+  console.log('Balance:', data);
 }
