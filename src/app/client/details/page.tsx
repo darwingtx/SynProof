@@ -1,5 +1,6 @@
 "use client"
 
+import "./style.css";
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -35,82 +36,86 @@ export default function DeviceInfoPage() {
   })
 
   const pendingUpdatesCount = deviceInfo.softwareVersions.filter(
-    (software) => software.currentVersion !== software.latestVersion,
+      (software) => software.currentVersion !== software.latestVersion,
   ).length
 
   return (
-    <div className="container mx-auto py-10 space-y-6">
-      <h1 className="text-3xl font-bold">Equipo <span className="font-mono">{deviceInfo.serialNumber}</span></h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>ID del equipo</CardTitle>
-        </CardHeader>
-        <CardContent className="font-mono">
-          <p>{deviceInfo.id}</p>
-        </CardContent>
-      </Card>
+      <div className="container mx-auto py-10 space-y-6">
+        <h1 className="text-3xl font-bold">Equipo <span className="font-mono">{deviceInfo.serialNumber}</span></h1>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Numero de serial</CardTitle>
-        </CardHeader>
-        <CardContent className="font-mono">
-          <p>{deviceInfo.serialNumber}</p>
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Sistema operativo</CardTitle>
-        </CardHeader>
-        <CardContent className="font-mono">
-          <p>{deviceInfo.operatingSystem}</p>
-        </CardContent>
-      </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>ID del equipo</CardTitle>
+            </CardHeader>
+            <CardContent className="font-mono">
+              <p>{deviceInfo.id}</p>
+            </CardContent>
+          </Card>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>Estado actualizaciones</CardTitle>
-          {pendingUpdatesCount > 0 && (
-            <Badge variant="warning" className="bg-[#fbbf24] hover:bg-[#f59e0b]">
-              {pendingUpdatesCount} actualizaciones pendientes
-            </Badge>
-          )}
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nombre del programa</TableHead>
-                <TableHead>Version actual</TableHead>
-                <TableHead>Version mas reciente</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {deviceInfo.softwareVersions.map((software, index) => (
-                <TableRow key={software.name}>
-                  <TableCell className="w-full font-mono">{software.name}</TableCell>
-                  <TableCell className="w-1/3 text-right font-mono">{software.currentVersion}</TableCell>
-                  <TableCell className="w-1/3 text-right font-mono">{software.latestVersion}</TableCell>
+          <Card>
+            <CardHeader>
+              <CardTitle>Numero de serial</CardTitle>
+            </CardHeader>
+            <CardContent className="font-mono">
+              <p>{deviceInfo.serialNumber}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Sistema operativo</CardTitle>
+            </CardHeader>
+            <CardContent className="font-mono">
+              <p>{deviceInfo.operatingSystem}</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row align-center justify-between">
+              <CardTitle>Estado</CardTitle>
+              <Badge
+                  variant="warning"
+                  className={`${deviceInfo.isUpdating ? "bg-[#fbbf24]" : "bg-green-500"} hover:bg-[#f59e0b]`}
+              >
+                {deviceInfo.isUpdating ? "Actualizando" : "Actualizado"}
+              </Badge>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Card de actualizaciones que ocupa toda la sección */}
+        <Card className="w-full">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle>Estado actualizaciones</CardTitle>
+            {pendingUpdatesCount > 0 && (
+                <Badge variant="warning" className="bg-[#fbbf24] hover:bg-[#f59e0b]">
+                  {pendingUpdatesCount} actualizaciones pendientes
+                </Badge>
+            )}
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nombre del programa</TableHead>
+                  <TableHead>Version actual</TableHead>
+                  <TableHead>Version mas reciente</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row align-center justify-between">
-          <CardTitle>Estado</CardTitle>
-          <Badge
-            variant="warning"
-            className={`${deviceInfo.isUpdating ? "bg-[#fbbf24]" : "bg-green-500"} hover:bg-[#f59e0b]`}
-          >
-            {deviceInfo.isUpdating ? "Actualizando" : "Actualizado"}
-          </Badge>
-        </CardHeader>
-      </Card>
-    </div>
+              </TableHeader>
+              <TableBody>
+                {deviceInfo.softwareVersions.map((software, index) => (
+                    <TableRow key={software.name}>
+                      <TableCell className="w-full font-mono">{software.name}</TableCell>
+                      <TableCell className="w-1/3 text-right font-mono">{software.currentVersion}</TableCell>
+                      <TableCell className="w-1/3 text-right font-mono">{software.latestVersion}</TableCell>
+                    </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
   )
 }
-
