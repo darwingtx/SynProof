@@ -43,12 +43,34 @@ export function update_packges(consensus_packages: PackageData[]): void {
     fs.writeFileSync("versions.json", to_json);
 }
 
-function command(command: string): any {
-    exec('command', (error, stdout, stderr) => {
+export async function extractPackagesWithVersions(): Promise<Array<PackageData>> {
+	return new Promise((resolve, reject) => 
+    exec('sudo pacman -Q', (error, stdout, stderr) => {
+			if (error) {
+				console.error(`Error ejecutando el comando: ${error}`);
+				reject({error, stderr});
+			}
+
+			resolve(stdout.split(`\n`)
+				.filter(p => p.trim().length > 0)
+				.map(p => {
+					const [packageName, packageVersion] = p.split(' ')
+					return {
+						name: packageName,
+						version: packageVersion
+					};
+				})
+		 );
+		}));
+}
+
+export async function getSerialNumber() {
+    return new Promise((resolve, reject) =>
+        exec('sudo dmidecode -s system-serial-number', (error, stdout, stderr) => {
         if (error) {
             console.error(`Error ejecutando el comando: ${error}`);
-            return {undefined, error};
+            reject({error, stderr});
         }
-        return {stdout, stderr}
-    });
+        resolve(stdout);
+    }));
 }
