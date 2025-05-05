@@ -2,9 +2,9 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-
 import {usePrivy} from '@privy-io/react-auth';
 import Nav from '@/components/ui/nav'
+
 export default function EquipmentDashboard() {
   const equipments = [
     {
