@@ -1,0 +1,42 @@
+
+
+.connection-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .button-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  .btn {
+    background-color: #183D3D; /* Azul Tailwind */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .btn:hover {
+    background-color: #5C8374; /* más oscuro */
+  }
+  
+  .table-container .custom-table {
+    /* border-radius: 10px; */
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #171717; /* Fondo oscuro */
+    color: white !important; /* Texto claro para contraste */
+  }
+  
+  .custom-table th,
+  .custom-table td {
+    border: 1px solid #333; /* Bordes más visibles sobre fondo oscuro */
+    padding: 0.75rem;
+    text-align: left;
+  }
