@@ -2,47 +2,18 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {usePrivy} from '@privy-io/react-auth';
-import Nav from '@/components/ui/nav'
+import { usePrivy } from '@privy-io/react-auth';
+import { useEffect, useState } from 'react';
+import './styles.css';
+import Loading from "../components/Loanding";
 
-export default function EquipmentDashboard() {
-  const equipments = [
-    {
-      id: "7e0efe28e710a775596d3b93c8c26509",
-      serial: "NHQ59AL00H9480D4F83400",
-      os: "NixOS",
-      pendingUpdates: 13,
-      status: "Actualizando",
-    },
-    {
-      id: "7e0efe28e710a775596d3b93c8c26510",
-      serial: "NHQ59AL00H9480D4F83401",
-      os: "Ubuntu",
-      pendingUpdates: 2,
-      status: "Actualizando",
-    },
-    {
-      id: "7e0efe28e710a775596d3b93c8c26511",
-      serial: "NHQ59AL00H9480D4F83402",
-      os: "Alpine",
-      pendingUpdates: 9,
-      status: "Actualizando",
-    },
-    {
-      id: "7e0efe28e710a775596d3b93c8c26512",
-      serial: "NHQ59AL00H9480D4F83403",
-      os: "Manjaro",
-      pendingUpdates: 2,
-      status: "Actualizando",
-    },
-    {
-      id: "7e0efe28e710a775596d3b93c8c26513",
-      serial: "NHQ59AL00H9480D4F83404",
-      os: "NixOS",
-      pendingUpdates: 13,
-      status: "Actualizando",
-    },
-  ]
+interface Equipment {
+  id: string;
+  serial: string;
+  os: string;
+  pendingUpdates: number;
+  status: string;
+}
 
 export default function EquipmentDashboard() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
@@ -156,32 +127,32 @@ export default function EquipmentDashboard() {
   // Si no está autenticado, mostrar botón de login
   if (!authenticated) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <button onClick={login} className="btn">Conectar Wallet</button>
-      </div>
+        <div className="flex justify-center items-center h-screen">
+          <button onClick={login} className="btn">Conectar Wallet</button>
+        </div>
     );
   }
 
   // Si está autenticado pero está verificando si es admin
   if (adminChecking) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-pulse text-white">
-          Verificando permisos...
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-pulse text-white">
+            Verificando permisos...
+          </div>
         </div>
-      </div>
     );
   }
 
   // Si está autenticado pero no es admin
   if (!isAdmin) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen gap-4">
-        <div className="text-white text-xl">
-          No tienes permisos de administrador para acceder a esta página.
+        <div className="flex flex-col justify-center items-center h-screen gap-4">
+          <div className="text-white text-xl">
+            No tienes permisos de administrador para acceder a esta página.
+          </div>
+          <button onClick={logout} className="btn">Desconectar</button>
         </div>
-        <button onClick={logout} className="btn">Desconectar</button>
-      </div>
     );
   }
 
@@ -194,62 +165,62 @@ export default function EquipmentDashboard() {
 
   // Si está autenticado y es admin, mostrar el dashboard
   return (
-    <div className="p-6 max-w-full">
-      {/* Contenedor de conexión y botones */}
-      <div className="connection-container mb-8">
-        <div className="button-row">
-          <button onClick={() => fetchBalance(address!)} className="btn">Consultar balance</button>
-          <button onClick={logout} className="btn">Desconectar</button>
+      <div className="p-6 max-w-full">
+        {/* Contenedor de conexión y botones */}
+        <div className="connection-container mb-8">
+          <div className="button-row">
+            <button onClick={() => fetchBalance(address!)} className="btn">Consultar balance</button>
+            <button onClick={logout} className="btn">Desconectar</button>
+          </div>
+        </div>
+
+        {/* Contenedor de la tabla */}
+        <div className="table-container">
+          <h1 className="text-4xl font-bold mb-4 text-white">Estado de los equipos</h1>
+
+          {isLoading ? (
+              <Loading />
+          ) : (
+              <Table className="custom-table border-solid" >
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="font-medium text-white">ID del equipo</TableHead>
+                    <TableHead className="font-medium text-white">Número de serial</TableHead>
+                    <TableHead className="font-medium text-white">Sistema operativo</TableHead>
+                    <TableHead className="font-medium text-white">Estado actualizaciones</TableHead>
+                    <TableHead className="font-medium text-white">Estado</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {equipments.map((equipment) => (
+                      <TableRow key={equipment.id}>
+                        <TableCell className="font-mono text-white">{equipment.id}</TableCell>
+                        <TableCell className="font-mono text-white">{equipment.serial}</TableCell>
+                        <TableCell className="font-mono text-white">{equipment.os}</TableCell>
+                        <TableCell>
+                          <Badge
+                              variant="outline"
+                              className={`bg-${getUpdateBadgeVariant(equipment.pendingUpdates)}-400 text-white border-none px-3 py-1 font-mono`}
+                          >
+                            {equipment.pendingUpdates} actualizaciones pendientes
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                              variant="outline"
+                              className={`bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-400 hover:bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-500 text-white border-none font-mono px-3 py-1`}
+                          >
+                            {equipment.status}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+          )}
+          <p className="text-white">Cuenta como Administrador</p>
         </div>
       </div>
-
-      {/* Contenedor de la tabla */}
-      <div className="table-container">
-        <h1 className="text-4xl font-bold mb-4 text-white">Estado de los equipos</h1>
-
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <Table className="custom-table border-solid" >
-            <TableHeader>
-              <TableRow>
-                <TableHead className="font-medium text-white">ID del equipo</TableHead>
-                <TableHead className="font-medium text-white">Número de serial</TableHead>
-                <TableHead className="font-medium text-white">Sistema operativo</TableHead>
-                <TableHead className="font-medium text-white">Estado actualizaciones</TableHead>
-                <TableHead className="font-medium text-white">Estado</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {equipments.map((equipment) => (
-                <TableRow key={equipment.id}>
-                  <TableCell className="font-mono text-white">{equipment.id}</TableCell>
-                  <TableCell className="font-mono text-white">{equipment.serial}</TableCell>
-                  <TableCell className="font-mono text-white">{equipment.os}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={`bg-${getUpdateBadgeVariant(equipment.pendingUpdates)}-400 text-white border-none px-3 py-1 font-mono`}
-                    >
-                      {equipment.pendingUpdates} actualizaciones pendientes
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={`bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-400 hover:bg-${equipment.status.toLowerCase() === "actualizando" ? "amber" : "green"}-500 text-white border-none font-mono px-3 py-1`}
-                    >
-                      {equipment.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-        <p className="text-white">Cuenta como Administrador</p>
-      </div>
-    </div>
   )
 }
 
