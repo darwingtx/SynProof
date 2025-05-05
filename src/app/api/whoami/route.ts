@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
         console.log(`Successfully created contract instance for address: ${connectedAddress}`);
         console.log('Attempting to call trackComputer with:', userPrivateKey);
 
-        const tx = await provider.getTransaction("0xba6996eecf4b3378c482d8cf2e01120547fc2758ea5c3e45c05240744d50cafe")
+        const tx = await provider.getTransaction("0x30474c77d5f8a105e7cda268d8d8ee071936647403227fd22c80c1eeefca5acc")
         // @ts-ignore
         console.log("Transaction: "+ tx.data)
 
