@@ -59,18 +59,21 @@ export async function POST(req: NextRequest) {
             // @ts-ignore
             const decoded = iface.parseTransaction({ data: tx.data, value: tx.value });
             // @ts-ignore
-            console.log('Nombre de la función:', decoded.name);
+            const name = decoded.name
+            console.log('Nombre de la función:', name);
             // @ts-ignore
-            console.log('Argumentos:', decoded.args);
+            const args = decoded.args;
+            console.log('Argumentos:', args);
+            // @ts-ignore
+
+            return NextResponse.json({
+                name,
+                args,
+            });
         } catch (error) {
-            console.error('Error al decodificar:', error);
+            return NextResponse.json({error})
         }
 
-        return NextResponse.json({
-            address: address,
-
-            serial_number: await getSerialNumber(),
-        })
     } catch (err: any) {
         console.error('Error checking roles:', err);
         return NextResponse.json({
