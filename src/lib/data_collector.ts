@@ -46,21 +46,12 @@ export function update_packges(consensus_packages: PackageData[]): void {
 export async function extractPackagesWithVersions(): Promise<Array<PackageData>> {
 	return new Promise((resolve, reject) => 
     exec('sudo pacman -Q', (error, stdout, stderr) => {
-			/*
 			if (error) {
 				console.error(`Error ejecutando el comando: ${error}`);
 				reject({error, stderr});
 			}
-			*/
 
-			const temp = `a52dec 0.8.0-2
-aalib 1.4rc5-18
-abseil-cpp 20240722.0-1
-accountsservice 23.13.9-2
-acl 2.3.2-1
-acpi 1.7-4`
-
-			resolve(temp.split(`\n`)
+			resolve(stdout.split(`\n`)
 				.filter(p => p.trim().length > 0)
 				.map(p => {
 					const [packageName, packageVersion] = p.split(' ')
@@ -71,4 +62,15 @@ acpi 1.7-4`
 				})
 		 );
 		}));
+}
+
+export async function getSerialNumber() {
+    return new Promise((resolve, reject) =>
+        exec('sudo dmidecode -s system-serial-number', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error ejecutando el comando: ${error}`);
+            reject({error, stderr});
+        }
+        resolve(stdout);
+    }));
 }
