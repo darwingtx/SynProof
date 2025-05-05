@@ -20,6 +20,44 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Features
+
+### Dashboard Page (`/dashboard`)
+The dashboard page provides an overview of equipment status and management. Key features include:
+
+- **Authentication**: Users must connect their wallet to access the dashboard
+- **Admin Verification**: System checks if the connected wallet has admin privileges
+- **Equipment Status Table**: Displays real-time information about:
+  - Equipment ID
+  - Serial Number
+  - Operating System
+  - Pending Updates
+  - Current Status
+- **Loading States**: 
+  - Shows loading indicator while verifying admin status
+  - Displays loading state while fetching equipment data
+- **Error Handling**:
+  - Handles authentication errors
+  - Manages admin verification failures
+  - Handles data fetching errors gracefully
+
+### Details Page (`/details`)
+The details page provides in-depth information about specific equipment. Features include:
+
+- **Detailed Equipment Information**:
+  - Complete equipment specifications
+  - Update history
+  - Current status details
+- **Real-time Updates**:
+  - Live status monitoring
+  - Update progress tracking
+- **Action Controls**:
+  - Update management
+  - Status modification
+  - Equipment configuration
+
+
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
