@@ -2,18 +2,47 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { usePrivy } from '@privy-io/react-auth';
-import { useEffect, useState } from 'react';
-import './styles.css';
-import Loading from "../components/Loanding";
 
-interface Equipment {
-  id: string;
-  serial: string;
-  os: string;
-  pendingUpdates: number;
-  status: string;
-}
+import {usePrivy} from '@privy-io/react-auth';
+import Nav from '@/components/ui/nav'
+export default function EquipmentDashboard() {
+  const equipments = [
+    {
+      id: "7e0efe28e710a775596d3b93c8c26509",
+      serial: "NHQ59AL00H9480D4F83400",
+      os: "NixOS",
+      pendingUpdates: 13,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26510",
+      serial: "NHQ59AL00H9480D4F83401",
+      os: "Ubuntu",
+      pendingUpdates: 2,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26511",
+      serial: "NHQ59AL00H9480D4F83402",
+      os: "Alpine",
+      pendingUpdates: 9,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26512",
+      serial: "NHQ59AL00H9480D4F83403",
+      os: "Manjaro",
+      pendingUpdates: 2,
+      status: "Actualizando",
+    },
+    {
+      id: "7e0efe28e710a775596d3b93c8c26513",
+      serial: "NHQ59AL00H9480D4F83404",
+      os: "NixOS",
+      pendingUpdates: 13,
+      status: "Actualizando",
+    },
+  ]
 
 export default function EquipmentDashboard() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);

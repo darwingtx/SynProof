@@ -12,8 +12,16 @@ export async function POST(req: NextRequest, res: NextResponse) {
     try {
         const balance = await provider.getBalance(address);
         const readable = ethers.formatEther(balance);
-        return NextResponse.json({ balance: readable });
+        return NextResponse.json({
+            balance: readable,
+            fee: await provider.getFeeData(),
+            trasactions: await provider.getTransactionCount(address)
+        });
     } catch (err) {
         return NextResponse.json({ error: 'Error getting the balance' }, { status: 500 })
     }
 }
+
+
+
+
