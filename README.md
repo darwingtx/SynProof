@@ -17,11 +17,11 @@ SynProof utiliza la blockchain de Avalanche (L1) para almacenar los datos de mon
 ### Instrucciones para Configurar Avalanche
 
 1. **Configurar una Wallet de Avalanche**:
-   - Crea una wallet en [Avalanche Wallet](https://wallet.avax.network/).
+   - Crea una wallet en Core
    - Asegúrate de cambiar a la red de prueba FujiNet.
 
-2. **Obtener AVAX de Prueba**:
-   - Usa un faucet para obtener AVAX de prueba en FujiNet. Puedes acceder al faucet en [Avalanche Faucet](https://faucet.avax.network/).
+2. **Crear L1 en la TestNet de Avalanche**:
+   - Se puede crear usando el servicio AvaCloud
 
 3. **Configurar el Proyecto**:
    - Asegúrate de que las credenciales de la wallet y la configuración de la red estén correctamente integradas en el proyecto.
